@@ -21,19 +21,20 @@ app.get('/_next/*', function (req, res) {
   Proxy.web(req, res, { target: 'http://localhost:3006' });
 });
 app.get('*', async function (req, res) {
-  const domain = req.path;
-  visibleLog(`going to request on: http://localhost:3006${domain}`);
-  const isCached = await getCachedPage(redis, domain);
+  const domain = req.headers.host;
+  const path = req.path;
+  visibleLog(`going to request on: http://localhost:3006/${domain}${path}`);
+  const isCached = await getCachedPage(redis, domain + path);
   if (isCached.status) {
     res
       .setHeader('content-type', 'text/html; charset=utf-8')
       .send(isCached.data);
   } else {
-    const urlString = `http://localhost:3006${domain}`;
+    const urlString = `http://localhost:3006/${domain}${path}`;
     axios
       .get(urlString)
       .then(async (resp) => {
-        cacheIt(redis, domain, resp.data);
+        cacheIt(redis, domain + path, resp.data);
         res
           .setHeader('content-type', 'text/html; charset=utf-8')
           .send(resp.data);
