@@ -15,22 +15,22 @@ const redis = new Redis({
 
 var app = express();
 app.get('/favicon.ico', function (req, res) {
-  Proxy.web(req, res, { target: 'http://localhost:3006' });
+  Proxy.web(req, res, { target: '127.0.0.1:3006' });
 });
 app.get('/_next/*', function (req, res) {
-  Proxy.web(req, res, { target: 'http://localhost:3006' });
+  Proxy.web(req, res, { target: '127.0.0.1:3006' });
 });
 app.get('*', async function (req, res) {
   const domain = req.headers.host;
   const path = req.path;
-  visibleLog(`going to request on: http://localhost:3006/${domain}${path}`);
+  visibleLog(`going to request on: 127.0.0.1:3006/${domain}${path}`);
   const isCached = await getCachedPage(redis, domain + path);
   if (isCached.status) {
     res
       .setHeader('content-type', 'text/html; charset=utf-8')
       .send(isCached.data);
   } else {
-    const urlString = `http://localhost:3006/${domain}${path}`;
+    const urlString = `127.0.0.1:3006/${domain}${path}`;
     axios
       .get(urlString)
       .then(async (resp) => {
