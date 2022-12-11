@@ -22,6 +22,7 @@ app.get('/_next/*', function (req, res) {
 });
 app.get('*', async function (req, res) {
   const domain = req.path;
+  visibleLog(`going to request on: http://localhost:3006${domain}`);
   const isCached = await getCachedPage(redis, domain);
   if (isCached.status) {
     res
