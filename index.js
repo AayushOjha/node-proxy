@@ -15,10 +15,10 @@ const redis = new Redis({
 
 var app = express();
 app.get('/favicon.ico', function (req, res) {
-  res.send('null');
+  Proxy.web(req, res, { target: 'http://localhost:3006' });
 });
 app.get('/_next/*', function (req, res) {
-  Proxy.web(req, res, { target: 'http://localhost:3000' });
+  Proxy.web(req, res, { target: 'http://localhost:3006' });
 });
 app.get('*', async function (req, res) {
   const domain = req.path;
@@ -28,7 +28,7 @@ app.get('*', async function (req, res) {
       .setHeader('content-type', 'text/html; charset=utf-8')
       .send(isCached.data);
   } else {
-    const urlString = `http://localhost:3000${domain}`;
+    const urlString = `http://localhost:3006${domain}`;
     axios
       .get(urlString)
       .then(async (resp) => {
