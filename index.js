@@ -27,6 +27,7 @@ app.get('*', async function (req, res) {
     `going to request on: http://staging-4-wbproxy.thrillo.dev/${domain}${path}`
   );
   const isCached = await getCachedPage(redis, domain + path);
+  visibleLog('cache present:' + isCached);
   if (isCached.status) {
     res
       .setHeader('content-type', 'text/html; charset=utf-8')
