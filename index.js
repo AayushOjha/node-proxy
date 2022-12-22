@@ -18,6 +18,7 @@ app.get('/favicon.ico', function (req, res) {
   Proxy.web(req, res, { target: 'http://staging-4-wbproxy.thrillo.dev' });
 });
 app.get('/_next/*', function (req, res) {
+  visibleLog('hitting here: ' + req.query);
   Proxy.web(req, res, { target: 'http://staging-4-wbproxy.thrillo.dev' });
 });
 app.get('*', async function (req, res) {
