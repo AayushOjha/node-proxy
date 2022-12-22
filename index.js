@@ -28,7 +28,7 @@ app.get('*', async function (req, res) {
   );
   const isCached = await getCachedPage(redis, domain + path);
   visibleLog('cache present:' + JSON.stringify(isCached));
-  if (isCached.status) {
+  if (isCached.data) {
     res
       .setHeader('content-type', 'text/html; charset=utf-8')
       .send(isCached.data);
